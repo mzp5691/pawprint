@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "electron": "cross-env NODE_ENV=development concurrently \"npm run dev\" \"wait-on http://localhost:5173 && electron .\"",
-    "electron:package": "electron-builder"
+    "electron:package": "vite build && electron-builder"
   },
   "dependencies": {
     "electron-store": "^8.1.0",

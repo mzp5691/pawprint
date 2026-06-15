@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [vue()],
   base: './',
   build: {
-    outDir: 'dist'
+    outDir: 'dist/renderer'
   },
   server: {
     port: 5173,

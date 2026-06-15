@@ -11,7 +11,7 @@ let tray = null
 let noteWindows = {}
 
 function createTray() {
-  const icon = nativeImage.createEmpty()
+  const icon = nativeImage.createFromPath(path.join(__dirname, 'build', 'icon.ico'))
   tray = new Tray(icon)
   tray.setToolTip('爪印')
 
@@ -53,6 +53,7 @@ function createMainWindow() {
     x: bounds.x,
     y: bounds.y,
     frame: false,
+    icon: nativeImage.createFromPath(path.join(__dirname, 'build', 'icon.ico')),
     webPreferences: {
       preload: path.join(__dirname, 'electron-preload.js'),
       contextIsolation: true,
@@ -70,7 +71,7 @@ function createMainWindow() {
   if (process.env.NODE_ENV === 'development') {
     mainWindow.loadURL('http://localhost:5173')
   } else {
-    mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'))
+    mainWindow.loadFile(path.join(__dirname, 'dist', 'renderer', 'index.html'))
   }
 }
 
@@ -106,6 +107,7 @@ function createNoteWindow(noteId, options = {}) {
     resizable: true,
     movable: true,
     transparent: true,
+    icon: nativeImage.createFromPath(path.join(__dirname, 'build', 'icon.ico')),
     alwaysOnTop: noteData.alwaysOnTop,
     webPreferences: {
       preload: path.join(__dirname, 'electron-preload.js'),
@@ -120,7 +122,7 @@ function createNoteWindow(noteId, options = {}) {
   if (process.env.NODE_ENV === 'development') {
     noteWindow.loadURL(`http://localhost:5173?type=${viewType}&id=${noteId}`)
   } else {
-    noteWindow.loadFile(path.join(__dirname, 'dist', 'index.html'), {
+    noteWindow.loadFile(path.join(__dirname, 'dist', 'renderer', 'index.html'), {
       query: { type: viewType, id: noteId }
     })
   }
