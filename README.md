@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-基于 Electron + Vue 3 + Vite 构建的 PC 桌面爪印应用，支持爪印管理、置顶、完成状态、主题切换等功能。
+基于 Electron + Vue 3 + Vite 构建的 PC 桌面爪印便签应用，支持便签管理、置顶、完成状态、主题切换等功能。
 
 ## 技术栈
 
@@ -27,7 +27,7 @@ pawprint/
 │       ├── main.js               # Vue 入口
 │       ├── style.css             # 全局样式 + CSS 变量
 │       └── components/
-│           └── NoteDetail.vue    # 爪印详情编辑组件
+│           └── NoteDetail.vue    # 便签详情编辑组件
 ├── electron-main.js              # Electron 主进程
 ├── electron-preload.js           # 预加载脚本（IPC 桥接）
 ├── electron-builder.json         # 打包配置
@@ -47,7 +47,7 @@ pawprint/
 │                                                     │
 │  ┌─────────────┐  ┌──────────────┐  ┌───────────┐  │
 │  │ mainWindow  │  │ noteWindows  │  │   Tray    │  │
-│  │  (管理页)    │  │  (爪印窗口)   │  │  (托盘)   │  │
+│  │  (管理页)    │  │  (便签窗口)   │  │  (托盘)   │  │
 │  └──────┬──────┘  └──────┬───────┘  └───────────┘  │
 │         │                │                          │
 │         └────────┬───────┘                          │
@@ -80,31 +80,31 @@ pawprint/
 
 ### IPC 通信协议
 
-| 通道 | 方向 | 说明 |
-|------|------|------|
-| `create-note` | Renderer → Main | 创建爪印窗口（同步，返回 noteId） |
-| `save-note` | Renderer → Main | 保存新爪印数据（不弹窗） |
-| `update-note` | Renderer → Main | 更新爪印数据 |
-| `delete-note` | Renderer → Main | 删除爪印 |
-| `get-notes` | Renderer → Main | 获取所有爪印（同步） |
-| `notes-changed` | Main → Renderer | 通知爪印数据变更 |
-| `shortcut-create-note` | Main → Renderer | 快捷键触发新建 |
-| `window-minimize` | Renderer → Main | 最小化窗口 |
-| `window-maximize` | Renderer → Main | 最大化/还原窗口 |
-| `window-close` | Renderer → Main | 隐藏窗口到托盘 |
-| `window-set-always-on-top` | Renderer → Main | 设置窗口置顶 |
-| `window-set-opacity` | Renderer → Main | 设置窗口透明度 |
-| `save-setting` | Renderer → Main | 保存设置项 |
-| `get-settings` | Renderer → Main | 获取设置（同步） |
+| 通道 | 方向 | 说明                   |
+|------|------|----------------------|
+| `create-note` | Renderer → Main | 创建便签窗口（同步，返回 noteId） |
+| `save-note` | Renderer → Main | 保存新便签数据（不弹窗）         |
+| `update-note` | Renderer → Main | 更新便签数据               |
+| `delete-note` | Renderer → Main | 删除便签                 |
+| `get-notes` | Renderer → Main | 获取所有便签（同步）           |
+| `notes-changed` | Main → Renderer | 通知便签数据变更             |
+| `shortcut-create-note` | Main → Renderer | 快捷键触发新建              |
+| `window-minimize` | Renderer → Main | 最小化窗口                |
+| `window-maximize` | Renderer → Main | 最大化/还原窗口             |
+| `window-close` | Renderer → Main | 隐藏窗口到托盘              |
+| `window-set-always-on-top` | Renderer → Main | 设置窗口置顶               |
+| `window-set-opacity` | Renderer → Main | 设置窗口透明度              |
+| `save-setting` | Renderer → Main | 保存设置项                |
+| `get-settings` | Renderer → Main | 获取设置（同步）             |
 
 ### 数据模型
 
-**爪印数据 (notes.{noteId})**
+**爪印便签数据 (notes.{noteId})**
 ```javascript
 {
   id: "note-1718368800000",
-  title: "爪印标题",
-  content: "爪印内容",
+  title: "爪印便签标题",
+  content: "爪印便签内容",
   opacity: 0.95,           // 窗口透明度 0.3~1
   alwaysOnTop: false,      // 是否置顶
   completed: false,        // 是否完成
@@ -136,7 +136,7 @@ pawprint/
 
 **路由逻辑**：通过 URL 参数 `type` 切换视图
 - `type=manager`（默认）：管理列表页
-- `type=note` / `type=view`：爪印详情编辑页
+- `type=note` / `type=view`：便签详情编辑页
 
 **标题栏**
 - 左侧：Logo + 文字（可拖拽移动窗口）
@@ -144,10 +144,10 @@ pawprint/
 - 设置菜单：主题选择、主题色选择、窗口透明度
 
 **工具栏**
-- 新建爪印按钮（虚线边框样式）
+- 新建便签按钮（虚线边框样式）
 - 排序切换按钮（正序/倒序）
 
-**爪印列表**
+**便签列表**
 - 卡片式布局，每张卡片包含：复选框 + 标题 + 内容预览
 - Hover 显示操作按钮：👁 查看 | 📌 置顶 | 🗑️ 删除
 - 置顶项：左侧主题色边框 + 浅色背景
@@ -168,7 +168,7 @@ pawprint/
 
 ### 2. 详情窗口 (NoteDetail.vue)
 
-独立窗口，打开已有爪印进行编辑：
+独立窗口，打开已有便签进行编辑：
 - 标题栏：拖拽 + 标题输入 + 透明度/置顶/保存/关闭
 - 内容区：全屏文本域
 - 输入防抖保存（500ms）
@@ -177,15 +177,15 @@ pawprint/
 
 **窗口管理**
 - 主窗口：frame: false, transparent: true, 默认宽度 280px
-- 爪印窗口：frame: false, transparent: true, 支持独立透明度和置顶
+- 便签窗口：frame: false, transparent: true, 支持独立透明度和置顶
 - 关闭主窗口时隐藏到托盘，不退出应用
 
 **托盘**
-- 右键菜单：显示主窗口、新建爪印、退出
+- 右键菜单：显示主窗口、新建便签、退出
 - 点击显示主窗口
 
 **全局快捷键**
-- `Ctrl+N`：新建爪印
+- `Ctrl+N`：新建便签
 - `Ctrl+Shift+S`：显示主窗口
 
 **持久化**
@@ -196,17 +196,17 @@ pawprint/
 ### 4. 预加载脚本 (electron-preload.js)
 
 通过 contextBridge 暴露安全的 API 到 `window.electronAPI`：
-- 爪印操作：createNote, saveNote, updateNote, deleteNote, getNotes
+- 便签操作：createNote, saveNote, updateNote, deleteNote, getNotes
 - 窗口操作：windowMinimize, windowMaximize, windowClose, windowSetAlwaysOnTop, windowSetOpacity
 - 设置操作：saveSetting, getSettings
 - 事件监听：onNotesChanged, onShortcutCreateNote
 
 ## 快捷键
 
-| 快捷键 | 功能 |
-|--------|------|
-| `Ctrl+N` | 新建爪印 |
-| `Ctrl+Shift+S` | 显示主窗口 |
+| 快捷键 | 功能     |
+|--------|--------|
+| `Ctrl+N` | 新建便签   |
+| `Ctrl+Shift+S` | 显示主窗口  |
 | `Escape` | 关闭设置菜单 |
 
 ## 运行命令
@@ -229,7 +229,7 @@ npm run electron:package
 
 1. **端口配置**：Vite 使用 5173 端口，`strictPort: true` 防止端口冲突
 2. **环境变量**：使用 `cross-env` 设置 `NODE_ENV=development`
-3. **新建爪印流程**：
+3. **新建便签流程**：
    - 前端创建临时数据 → 用户输入 → 失焦时调用 `save-note` 保存
    - 不输入内容失焦 → 调用 `discardNewNote` 删除
 4. **菜单关闭**：点击外部 + blur 事件 + ESC 键三重保障
@@ -262,267 +262,3 @@ npm run electron:package
 ```
 
 支持 6 种主题色：绿色、蓝色、紫色、橙色、红色、粉色。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs

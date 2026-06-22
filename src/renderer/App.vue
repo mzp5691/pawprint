@@ -90,7 +90,7 @@
         <svg viewBox="0 0 24 24" width="14" height="14">
           <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#fff"/>
         </svg>
-        新建爪印
+        新建便签
       </button>
       <button @click="toggleSort" class="sort-btn" :title="sortOrder === 'desc' ? '倒序（最新在前）' : '正序（最早在前）'">
         <svg v-if="sortOrder === 'desc'" viewBox="0 0 24 24" width="14" height="14">
@@ -162,7 +162,7 @@
     </div>
 
     <div class="footer">
-      <span class="note-count">{{ noteCount }} 条爪印</span>
+      <span class="note-count">{{ noteCount }} 条便签</span>
       <span class="shortcut-tip">Ctrl+N 新建 | Ctrl+Shift+S 显示</span>
     </div>
   </div>
@@ -331,7 +331,7 @@ function updateField(id, field, value) {
 }
 
 function deleteNote(id) {
-  if (confirm('确定要删除这个爪印吗？')) {
+  if (confirm('确定要删除这个便签吗？')) {
     if (window.electronAPI) {
       window.electronAPI.deleteNote(id)
       refreshNotes()

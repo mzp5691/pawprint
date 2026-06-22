@@ -17,7 +17,7 @@ function createTray() {
 
   const contextMenu = Menu.buildFromTemplate([
     { label: '显示主窗口', click: () => showMainWindow() },
-    { label: '新建爪印', click: () => createNewNote() },
+    { label: '新建便签', click: () => createNewNote() },
     { type: 'separator' },
     { label: '退出', click: () => app.quit() }
   ])

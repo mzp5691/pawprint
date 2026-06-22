@@ -1,6 +1,6 @@
 {
   "appId": "com.pawprint.app",
-  "productName": "爪印",
+  "productName": "便签",
   "directories": {
     "output": "dist/build"
   },

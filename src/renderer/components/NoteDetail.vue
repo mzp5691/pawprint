@@ -54,7 +54,7 @@
       v-model="note.content"
       @input="debouncedUpdate"
       class="detail-textarea"
-      placeholder="输入爪印内容..."
+      placeholder="输入便签内容..."
     ></textarea>
   </div>
 </template>
